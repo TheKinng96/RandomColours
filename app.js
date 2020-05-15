@@ -10,7 +10,12 @@ let initialColor;
 
 sliders.forEach(slider => {
     slider.addEventListener('input', hslControls);
-})
+});
+colorDivs.forEach((div, index)=>{
+    div.addEventListener("change", ()=>{
+        updateTextUI(index);
+    });
+});
 
 
 //FUNCTIONS
@@ -21,9 +26,13 @@ function generateHex(){
 }
 
 function randomColor(){
+
+    initialColor = [];
     colorDivs.forEach((div,index) => {
         const hexText = div.children[0];
         const randomColor = generateHex();
+        //add to the array
+        initialColor.push(chroma(randomColor).hex());
 
         // Add the colour to the bg
         div.style.backgroundColor = randomColor;
@@ -39,6 +48,8 @@ function randomColor(){
 
         colorizeSliders(color,hue,brightness,saturation);
     });
+    //reset input sliders
+    resetInputs();
 } 
 
 function checkTextContrast(color,text){
@@ -78,7 +89,7 @@ function hslControls(e) {
     const brightness = sliders[1];
     const saturation = sliders[2];
 
-    const bgColor = colorDivs[index].querySelector("h2").innerText;
+    const bgColor = initialColor[index];
 
     let color = chroma (bgColor)
         .set("hsl.s",saturation.value)
@@ -86,6 +97,42 @@ function hslControls(e) {
         .set("hsl.h",hue.value);
 
     colorDivs[index].style.backgroundColor = color; 
+    colorizeSliders(color, hue, brightness, saturation);
+}
+
+function updateTextUI (index) {
+    const activeDiv = colorDivs[index];
+    const color = chroma(activeDiv.style.backgroundColor);
+    const textHex = activeDiv.querySelector('h2');
+    const icons = activeDiv.querySelectorAll(".controls button");
+    textHex.innerText = color.hex();
+
+    //check contrast
+    checkTextContrast(color,textHex);
+    for (icon of icons){
+        checkTextContrast(color,icon);
+    }
+}
+
+function resetInputs () {
+    const sliders = document.querySelectorAll(".sliders input");
+    sliders.forEach(slider => {
+        if(slider.name === "hue"){
+            const hueColor = initialColor[slider.getAttribute('data-hue')];
+            const hueValue = chroma(hueColor).hsl()[0];
+            slider.value = Math.floor(hueValue);
+        }
+        if(slider.name === "brightness"){
+            const brightColor = initialColor[slider.getAttribute('data-bright')];
+            const brightValue = chroma(brightColor).hsl()[2];
+            slider.value = Math.floor(brightValue * 100)/ 100;
+        }
+        if(slider.name === "saturation"){
+            const saturationColor = initialColor[slider.getAttribute('data-sat')];
+            const saturationValue = chroma(saturationColor).hsl()[1];
+            slider.value = Math.floor(saturationValue*100)/100;
+        }
+    })
 }
 
 randomColor();
