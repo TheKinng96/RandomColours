@@ -186,6 +186,10 @@ input[type="range"] {
     scrollbar-width: none;
 }
 
+.library-popup::-webkit-scrollbar {
+    display: none;
+}
+
 .custom-palette {
     display: flex;
     align-items: center;
