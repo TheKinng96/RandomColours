@@ -4,10 +4,10 @@ const generateBtn = document.querySelector(".generate");
 const sliders = document.querySelectorAll('input[type="range"]');
 const currentHexes = document.querySelectorAll(".colour h2");
 const popup = document.querySelector(".copy-container");
+const lockButton = document.querySelectorAll(".lock");
 const adjustBtn = document.querySelectorAll(".adjust");
 const closeAdjustments = document.querySelectorAll(".close-adjustment");
 const sliderContainers = document.querySelectorAll(".sliders");
-const lockButton = document.querySelectorAll(".lock");
 let initialColor;
 //local storage
 let savedPalettes = [];
@@ -48,7 +48,6 @@ lockButton.forEach((button, index) => {
       lockLayer(e, index);
     });
 });
-
 
 //FUNCTIONS
 // colour generator
@@ -94,11 +93,6 @@ function randomColor(){
         checkTextContrast(initialColor[index],button);
         checkTextContrast(initialColor[index],lockButton[index]);  
     });
-    lockButton.forEach((button, index) => {
-        button.addEventListener("click", e => {
-          lockLayer(e, index);
-        });
-      });
 } 
 
 function checkTextContrast(color,text){
