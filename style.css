@@ -184,6 +184,7 @@ input[type="range"] {
     overflow-y: scroll;
     max-height: 50vh;
     scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .library-popup::-webkit-scrollbar {
